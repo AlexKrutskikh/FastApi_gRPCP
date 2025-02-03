@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package api.v2;
+option go_package = "./API";
+
+message Data {
+  uint64 part = 1;
+  oneof content {
+    JSON json = 2;
+    bytes buffer = 3;
+  }
+}
+
+message ID {
+  string value = 1;
+}
+
+message Input {
+  ID id = 1;
+  Data data = 2;
+}
+
+message JSON {
+  string value = 1;
+}
+
+message Task {
+  enum State {
+    CREATED = 0;
+    QUEUED = 1;
+    RUNNING = 2;
+    CANCELED = 3;
+    DONE = 4;
+    WARNED = 5;
+    FAILED = 6;
+  }
+
+  ID id = 1;
+  State state = 2;
+  string msg = 3;  // Убрал 'optional', так как в proto3 это не нужно
+}
+
+/* Endpoint. */
+service App {
+  /* Retrieve endpoint information.
+   * Returns JSON in format:
+   * {
+   *   ": "SOFTWARE_NAME",
+   *   "version": "SOFTWARE_VERSION",
+   *   "system": {
+   *     "os": "OPERATING_SYSTEM",
+   *     "cpu": "CENTRAL_PROCESSING_UNIT_INFORMATION",
+   *     "gpu": "GRAPHICS_PROCESSING_UNIT_INFORMATION",
+   *     "ram": "RANDOM_ACCESS_MEMORY_INFORMATION"
+   *   }
+   * }
+   */
+  rpc GetInfo(google.protobuf.Empty) returns (JSON);
+
+  /* Endpoint tasks enumeration. */
+  rpc GetTasks(google.protobuf.Empty) returns (stream Task);
+
+  /* Task management. */
+  rpc Create(JSON) returns (Task);
+  rpc Upload(stream Input) returns (google.protobuf.Empty);
+  rpc Launch(ID) returns (google.protobuf.Empty);
+  rpc Review(ID) returns (Task);
+  rpc Pickup(ID) returns (stream Data);
+  rpc Cancel(ID) returns (google.protobuf.Empty);
+}
