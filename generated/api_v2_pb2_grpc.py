@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import api_v2_pb2 as api__v2__pb2
+from generated import api_v2_pb2 as api__v2__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 GRPC_GENERATED_VERSION = '1.70.0'
