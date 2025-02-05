@@ -9,13 +9,9 @@ from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+
 _runtime_version.ValidateProtobufRuntimeVersion(
-    _runtime_version.Domain.PUBLIC,
-    5,
-    29,
-    0,
-    '',
-    'api_v2.proto'
+    _runtime_version.Domain.PUBLIC, 5, 29, 0, "", "api_v2.proto"
 )
 # @@protoc_insertion_point(imports)
 
@@ -24,27 +20,28 @@ _sym_db = _symbol_database.Default()
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
-
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x61pi_v2.proto\x12\x06\x61pi.v2\x1a\x1bgoogle/protobuf/empty.proto\"O\n\x04\x44\x61ta\x12\x0c\n\x04part\x18\x01 \x01(\x04\x12\x1c\n\x04json\x18\x02 \x01(\x0b\x32\x0c.api.v2.JSONH\x00\x12\x10\n\x06\x62uffer\x18\x03 \x01(\x0cH\x00\x42\t\n\x07\x63ontent\"\x13\n\x02ID\x12\r\n\x05value\x18\x01 \x01(\t\";\n\x05Input\x12\x16\n\x02id\x18\x01 \x01(\x0b\x32\n.api.v2.ID\x12\x1a\n\x04\x64\x61ta\x18\x02 \x01(\x0b\x32\x0c.api.v2.Data\"\x15\n\x04JSON\x12\r\n\x05value\x18\x01 \x01(\t\"\xad\x01\n\x04Task\x12\x16\n\x02id\x18\x01 \x01(\x0b\x32\n.api.v2.ID\x12!\n\x05state\x18\x02 \x01(\x0e\x32\x12.api.v2.Task.State\x12\x0b\n\x03msg\x18\x03 \x01(\t\"]\n\x05State\x12\x0b\n\x07\x43REATED\x10\x00\x12\n\n\x06QUEUED\x10\x01\x12\x0b\n\x07RUNNING\x10\x02\x12\x0c\n\x08\x43\x41NCELED\x10\x03\x12\x08\n\x04\x44ONE\x10\x04\x12\n\n\x06WARNED\x10\x05\x12\n\n\x06\x46\x41ILED\x10\x06\x32\xe9\x02\n\x03\x41pp\x12/\n\x07GetInfo\x12\x16.google.protobuf.Empty\x1a\x0c.api.v2.JSON\x12\x32\n\x08GetTasks\x12\x16.google.protobuf.Empty\x1a\x0c.api.v2.Task0\x01\x12$\n\x06\x43reate\x12\x0c.api.v2.JSON\x1a\x0c.api.v2.Task\x12\x31\n\x06Upload\x12\r.api.v2.Input\x1a\x16.google.protobuf.Empty(\x01\x12,\n\x06Launch\x12\n.api.v2.ID\x1a\x16.google.protobuf.Empty\x12\"\n\x06Review\x12\n.api.v2.ID\x1a\x0c.api.v2.Task\x12$\n\x06Pickup\x12\n.api.v2.ID\x1a\x0c.api.v2.Data0\x01\x12,\n\x06\x43\x61ncel\x12\n.api.v2.ID\x1a\x16.google.protobuf.EmptyB\x07Z\x05./APIb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(
+    b'\n\x0c\x61pi_v2.proto\x12\x06\x61pi.v2\x1a\x1bgoogle/protobuf/empty.proto"O\n\x04\x44\x61ta\x12\x0c\n\x04part\x18\x01 \x01(\x04\x12\x1c\n\x04json\x18\x02 \x01(\x0b\x32\x0c.api.v2.JSONH\x00\x12\x10\n\x06\x62uffer\x18\x03 \x01(\x0cH\x00\x42\t\n\x07\x63ontent"\x13\n\x02ID\x12\r\n\x05value\x18\x01 \x01(\t";\n\x05Input\x12\x16\n\x02id\x18\x01 \x01(\x0b\x32\n.api.v2.ID\x12\x1a\n\x04\x64\x61ta\x18\x02 \x01(\x0b\x32\x0c.api.v2.Data"\x15\n\x04JSON\x12\r\n\x05value\x18\x01 \x01(\t"\xad\x01\n\x04Task\x12\x16\n\x02id\x18\x01 \x01(\x0b\x32\n.api.v2.ID\x12!\n\x05state\x18\x02 \x01(\x0e\x32\x12.api.v2.Task.State\x12\x0b\n\x03msg\x18\x03 \x01(\t"]\n\x05State\x12\x0b\n\x07\x43REATED\x10\x00\x12\n\n\x06QUEUED\x10\x01\x12\x0b\n\x07RUNNING\x10\x02\x12\x0c\n\x08\x43\x41NCELED\x10\x03\x12\x08\n\x04\x44ONE\x10\x04\x12\n\n\x06WARNED\x10\x05\x12\n\n\x06\x46\x41ILED\x10\x06\x32\xe9\x02\n\x03\x41pp\x12/\n\x07GetInfo\x12\x16.google.protobuf.Empty\x1a\x0c.api.v2.JSON\x12\x32\n\x08GetTasks\x12\x16.google.protobuf.Empty\x1a\x0c.api.v2.Task0\x01\x12$\n\x06\x43reate\x12\x0c.api.v2.JSON\x1a\x0c.api.v2.Task\x12\x31\n\x06Upload\x12\r.api.v2.Input\x1a\x16.google.protobuf.Empty(\x01\x12,\n\x06Launch\x12\n.api.v2.ID\x1a\x16.google.protobuf.Empty\x12"\n\x06Review\x12\n.api.v2.ID\x1a\x0c.api.v2.Task\x12$\n\x06Pickup\x12\n.api.v2.ID\x1a\x0c.api.v2.Data0\x01\x12,\n\x06\x43\x61ncel\x12\n.api.v2.ID\x1a\x16.google.protobuf.EmptyB\x07Z\x05./APIb\x06proto3'
+)
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
-_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'api_v2_pb2', _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, "api_v2_pb2", _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
-  _globals['DESCRIPTOR']._loaded_options = None
-  _globals['DESCRIPTOR']._serialized_options = b'Z\005./API'
-  _globals['_DATA']._serialized_start=53
-  _globals['_DATA']._serialized_end=132
-  _globals['_ID']._serialized_start=134
-  _globals['_ID']._serialized_end=153
-  _globals['_INPUT']._serialized_start=155
-  _globals['_INPUT']._serialized_end=214
-  _globals['_JSON']._serialized_start=216
-  _globals['_JSON']._serialized_end=237
-  _globals['_TASK']._serialized_start=240
-  _globals['_TASK']._serialized_end=413
-  _globals['_TASK_STATE']._serialized_start=320
-  _globals['_TASK_STATE']._serialized_end=413
-  _globals['_APP']._serialized_start=416
-  _globals['_APP']._serialized_end=777
+    _globals["DESCRIPTOR"]._loaded_options = None
+    _globals["DESCRIPTOR"]._serialized_options = b"Z\005./API"
+    _globals["_DATA"]._serialized_start = 53
+    _globals["_DATA"]._serialized_end = 132
+    _globals["_ID"]._serialized_start = 134
+    _globals["_ID"]._serialized_end = 153
+    _globals["_INPUT"]._serialized_start = 155
+    _globals["_INPUT"]._serialized_end = 214
+    _globals["_JSON"]._serialized_start = 216
+    _globals["_JSON"]._serialized_end = 237
+    _globals["_TASK"]._serialized_start = 240
+    _globals["_TASK"]._serialized_end = 413
+    _globals["_TASK_STATE"]._serialized_start = 320
+    _globals["_TASK_STATE"]._serialized_end = 413
+    _globals["_APP"]._serialized_start = 416
+    _globals["_APP"]._serialized_end = 777
 # @@protoc_insertion_point(module_scope)

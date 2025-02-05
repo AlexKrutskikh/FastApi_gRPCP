@@ -1,71 +1,100 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from pydantic import BaseModel
-import grpc
-import generated.api_v2_pb2 as api_v2
-import generated.api_v2_pb2_grpc as api_v2_grpc
-from google.protobuf.empty_pb2 import Empty  # Импортируем Empty из google.protobuf
-from google.protobuf.json_format import MessageToDict, ParseDict
-from typing import List
+from fastapi import Depends, FastAPI, File, HTTPException, UploadFile
 
-app = FastAPI(
-    title="gRPC to REST Proxy",
-    description="Прокси для преобразования REST API в gRPC",
-    version="1.0.0"
-)
+from client_def import (cancel_task, create_new_task, get_server_info,
+                        get_task_list, launch_task, pickup_task_data,
+                        review_task, upload_task_data)
 
-grpc_channel = grpc.insecure_channel("localhost:50051")
-grpc_stub = api_v2_grpc.AppStub(grpc_channel)
+app = FastAPI()
 
-class CreateTaskRequest(BaseModel):
-    description: str
 
-@app.get("/info", summary="Получить информацию о сервере")
-async def get_info():
+# Зависимость для получения stub
+def get_stub():
+    # Эта функция будет переопределена через dependency_overrides
+    raise NotImplementedError("Stub dependency not overridden!")
+
+
+# Эндпоинт для получения информации о сервере
+@app.get("/server-info")
+async def server_info(stub=Depends(get_stub)):
     try:
-        response = grpc_stub.GetInfo(Empty())  # Используем Empty()
-        return MessageToDict(response)
-    except grpc.RpcError as e:
-        raise HTTPException(status_code=500, detail=f"gRPC error: {e.details()}")
+        result = get_server_info(stub)
+        return result
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error fetching server info: {str(e)}"
+        )
 
-@app.get("/tasks", summary="Получить список задач", response_model=List[dict])
-async def get_tasks():
+
+# Эндпоинт для получения списка задач
+@app.get("/tasks")
+async def list_tasks(stub=Depends(get_stub)):
     try:
-        tasks = []
-        for task in grpc_stub.GetTasks(Empty()):  # Используем Empty()
-            tasks.append(MessageToDict(task))
-        return tasks
-    except grpc.RpcError as e:
-        raise HTTPException(status_code=500, detail=f"gRPC error: {e.details()}")
+        result = get_task_list(stub)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching tasks: {str(e)}")
 
-@app.post("/tasks", summary="Создать задачу", response_model=dict)
-async def create_task(request: CreateTaskRequest):
+
+# Эндпоинт для создания новой задачи
+@app.post("/tasks/create")
+async def create_task(description: str, stub=Depends(get_stub)):
     try:
-        grpc_request = ParseDict({"value": request.description}, api_v2.JSON())
-        response = grpc_stub.Create(grpc_request)
-        return MessageToDict(response)
-    except grpc.RpcError as e:
-        raise HTTPException(status_code=500, detail=f"gRPC error: {e.details()}")
+        result = create_new_task(description, stub)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating task: {str(e)}")
 
-@app.post("/tasks/{task_id}/upload", summary="Загрузить файл для задачи", response_model=dict)
-async def upload_file(task_id: str, file: UploadFile = File(...)):
+
+# Эндпоинт для загрузки данных задачи
+@app.post("/tasks/{task_id}/upload")
+async def upload_task(
+    task_id: str, file: UploadFile = File(...), stub=Depends(get_stub)
+):
     try:
-        def generate_inputs():
-            part = 1
-            while True:
-                content = file.file.read(1024)  # Синхронное чтение
-                if not content:
-                    break
-                yield api_v2.Input(
-                    id=api_v2.ID(value=task_id),
-                    data=api_v2.Data(part=part, buffer=content)
-                )
-                part += 1
+        buffer_data = await file.read()
+        result = upload_task_data(task_id, buffer_data, stub)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error uploading data: {str(e)}")
 
-        grpc_stub.Upload(generate_inputs())  # Передаем синхронный генератор
-        return {"message": f"File uploaded successfully for task {task_id}"}
 
-    except grpc.RpcError as e:
-        raise HTTPException(status_code=500, detail=f"gRPC error: {e.details()}")
+# Эндпоинт для запуска задачи
+@app.post("/tasks/{task_id}/launch")
+async def launch_task_endpoint(task_id: str, stub=Depends(get_stub)):
+    try:
+        result = launch_task(task_id, stub)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error launching task: {str(e)}")
 
-    finally:
-        await file.close()
+
+# Эндпоинт для проверки статуса задачи
+@app.get("/tasks/{task_id}/status")
+async def review_task_endpoint(task_id: str, stub=Depends(get_stub)):
+    try:
+        result = review_task(task_id, stub)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reviewing task: {str(e)}")
+
+
+# Эндпоинт для получения данных задачи
+@app.get("/tasks/{task_id}/data")
+async def pickup_task_data_endpoint(task_id: str, stub=Depends(get_stub)):
+    try:
+        result = pickup_task_data(task_id, stub)
+        return result
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error picking up task data: {str(e)}"
+        )
+
+
+# Эндпоинт для отмены задачи
+@app.delete("/tasks/{task_id}/cancel")
+async def cancel_task_endpoint(task_id: str, stub=Depends(get_stub)):
+    try:
+        result = cancel_task(task_id, stub)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error canceling task: {str(e)}")
