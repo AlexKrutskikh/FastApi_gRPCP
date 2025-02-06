@@ -9,7 +9,6 @@ app = FastAPI()
 
 # Зависимость для получения stub
 def get_stub():
-    # Эта функция будет переопределена через dependency_overrides
     raise NotImplementedError("Stub dependency not overridden!")
 
 
