@@ -31,7 +31,7 @@ def get_task_list(stub):
         raise HTTPException(status_code=500, detail=f"Error fetching tasks: {str(e)}")
 
 
-# Функция для создания новой задачи
+# Функция для создания новой задачи с декоратором для валидации
 @validate_json_description()
 def create_new_task(description, stub):
     try:
@@ -64,7 +64,7 @@ def upload_task_data(task_id, buffer_data, stub):
         raise HTTPException(status_code=500, detail=f"Error uploading data: {str(e)}")
 
 
-# Функция для запуска задачи
+# Функция для запуска задачи с декоратором для валидации
 @validate_task_exists()
 def launch_task(task_id, stub):
     try:
@@ -75,7 +75,7 @@ def launch_task(task_id, stub):
         raise HTTPException(status_code=500, detail=f"Error launching task: {str(e)}")
 
 
-# Функция для проверки статуса задачи
+# Функция для проверки статуса задачи с декоратором для валидации
 @validate_task_exists()
 def review_task(task_id, stub):
     try:
@@ -91,7 +91,7 @@ def review_task(task_id, stub):
         raise HTTPException(status_code=500, detail=f"Error reviewing task: {str(e)}")
 
 
-# Функция для получения данных задачи
+# Функция для получения данных задачи с декоратором для валидации
 @validate_task_exists()
 def pickup_task_data(task_id, stub):
     try:
@@ -114,7 +114,7 @@ def pickup_task_data(task_id, stub):
         )
 
 
-# Функция для отмены задачи
+# Функция для отмены задачи с декоратором для валидации
 @validate_task_exists()
 def cancel_task(task_id, stub):
     try:

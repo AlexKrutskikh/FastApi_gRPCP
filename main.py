@@ -3,36 +3,41 @@ import argparse
 import grpc
 import uvicorn
 
-import generated.api_v2_pb2_grpc as api_v2_grpc
+from generated.api_v2_pb2_grpc import AppStub
 from rest_proxy import app, get_stub
 
+"""
+Главная функция для запуска REST API-прокси для gRPC-сервиса.
 
-def setup_grpc_channel(grpc_port: int):
-    """
-    Создает канал связи с gRPC-сервером.
-    :param grpc_port: Порт gRPC-сервера.
-    :return: Объект stub.
-    """
-    channel = grpc.insecure_channel(f"localhost:{grpc_port}")
-    stub = api_v2_grpc.AppStub(channel)
-    return stub
+Описание:
+    1. Парсит аргументы командной строки для получения порта gRPC-сервера.
+    2. Создает канал связи с gRPC-сервером и инициализирует stub для взаимодействия.
+    3. Настройка FastAPI для использования созданного stub через механизм dependency overrides.
+    4. Запускает FastAPI-приложение с помощью Uvicorn на указанном хосте и порту.
 
+Аргументы:
+    Данная функция не принимает внешних аргументов. Аргументы командной строки парсятся внутри функции.
 
-def run_api(stub):
-    """
-    Запускает FastAPI-приложение с переданным stub.
-    :param stub: Объект stub для gRPC.
-    """
-    app.dependency_overrides[get_stub] = lambda: stub
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
+Возвращает:
+    None. Функция запускает сервер и работает бесконечно до остановки процесса.
+"""
 
 
-if __name__ == "__main__":
+def main():
+
     parser = argparse.ArgumentParser(description="REST API proxy for gRPC service")
     parser.add_argument(
         "--grpc-port", type=int, required=True, help="Port for gRPC service"
     )
     args = parser.parse_args()
 
-    stub = setup_grpc_channel(args.grpc_port)
-    run_api(stub)
+    channel = grpc.insecure_channel(f"localhost:{args.grpc_port}")
+    stub = AppStub(channel)
+
+    app.dependency_overrides[get_stub] = lambda: stub
+
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
+
+
+if __name__ == "__main__":
+    main()
